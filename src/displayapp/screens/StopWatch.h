@@ -43,7 +43,7 @@ namespace Pinetime::Applications::Screens {
     TickType_t oldTimeElapsed = 0;
     TickType_t blinkTime = 0;
     static constexpr int maxLapCount = 20;
-    TickType_t laps[maxLapCount + 1];
+    TickType_t laps[20 + 1];
     static constexpr int displayedLaps = 2;
     int lapsDone = 0;
     lv_obj_t *time, *msecTime, *btnPlayPause, *btnStopLap, *txtPlayPause, *txtStopLap;

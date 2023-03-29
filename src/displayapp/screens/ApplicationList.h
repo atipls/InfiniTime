@@ -46,15 +46,12 @@ namespace Pinetime {
           {Symbols::shoe, Apps::Steps},
           {Symbols::heartBeat, Apps::HeartRate},
           {Symbols::music, Apps::Music},
-
           {Symbols::paintbrush, Apps::Paint},
           {Symbols::paddle, Apps::Paddle},
           {"2", Apps::Twos},
           {Symbols::drum, Apps::Metronome},
-          {Symbols::map, Apps::Navigation},
-          {Symbols::none, Apps::None},
-
-          // {"M", Apps::Motion},
+          {Symbols::sun, Apps::Weather},
+          {"M", Apps::Motion},
         }};
         ScreenList<nScreens> screens;
       };

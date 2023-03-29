@@ -19,7 +19,6 @@
 #include "displayapp/screens/StopWatch.h"
 #include "displayapp/screens/Metronome.h"
 #include "displayapp/screens/Music.h"
-#include "displayapp/screens/Navigation.h"
 #include "displayapp/screens/Notifications.h"
 #include "displayapp/screens/SystemInfo.h"
 #include "displayapp/screens/Tile.h"
@@ -29,6 +28,7 @@
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/PassKey.h"
 #include "displayapp/screens/Error.h"
+#include "displayapp/screens/Weather.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -291,7 +291,7 @@ void DisplayApp::Refresh() {
                 LoadNewScreen(Apps::Notifications, DisplayApp::FullRefreshDirections::Down);
                 break;
               case TouchEvents::SwipeRight:
-                LoadNewScreen(Apps::QuickSettings, DisplayApp::FullRefreshDirections::RightAnim);
+                LoadNewScreen(Apps::QuickSettings, DisplayApp::FullRefreshDirections::Left);
                 break;
               case TouchEvents::DoubleTap:
                 PushMessageToSystemTask(System::Messages::GoToSleep);
@@ -399,8 +399,8 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
         std::make_unique<Screens::ApplicationList>(this, settingsController, batteryController, bleController, dateTimeController);
       break;
     case Apps::Motion:
-      // currentScreen = std::make_unique<Screens::Motion>(motionController);
-      // break;
+        currentScreen = std::make_unique<Screens::Motion>(motionController);
+        break;
     case Apps::None:
     case Apps::Clock:
       currentScreen = std::make_unique<Screens::Clock>(dateTimeController,
@@ -449,6 +449,9 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
       break;
     case Apps::Alarm:
       currentScreen = std::make_unique<Screens::Alarm>(alarmController, settingsController.GetClockType(), *systemTask, motorController);
+      break;
+    case Apps::Weather:
+      currentScreen = std::make_unique<Screens::Weather>(this, systemTask->nimble().weather());
       break;
 
     // Settings
@@ -521,9 +524,6 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
       break;
     case Apps::Music:
       currentScreen = std::make_unique<Screens::Music>(systemTask->nimble().music());
-      break;
-    case Apps::Navigation:
-      currentScreen = std::make_unique<Screens::Navigation>(systemTask->nimble().navigation());
       break;
     case Apps::HeartRate:
       currentScreen = std::make_unique<Screens::HeartRate>(heartRateController, *systemTask);

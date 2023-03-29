@@ -30,6 +30,3 @@ and for each font there is:
 - patches - list of extra "patches" to run: a path to a .patch file. (may be relative)
 - compress - optional. default disabled. add `"compress": true` to enable
 
-### Navigation font
-
-`navigtion.ttf` is created with the web app [icomoon](https://icomoon.io/app) by importing the svg files from `src/displayapp/icons/navigation/unique` and generating the font. `lv_font_navi_80.json` is a project file for the site, which you can import to add or remove icons.

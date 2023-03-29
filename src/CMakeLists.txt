@@ -385,7 +385,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FirmwareUpdate.cpp
         displayapp/screens/Music.cpp
         displayapp/screens/Weather.cpp
-        displayapp/screens/Navigation.cpp
         displayapp/screens/Metronome.cpp
         displayapp/screens/Motion.cpp
         displayapp/screens/FirmwareValidation.cpp
@@ -426,13 +425,10 @@ list(APPEND SOURCE_FILES
         displayapp/screens/settings/SettingBluetooth.cpp
 
         ## Watch faces
-        displayapp/icons/bg_clock.c
-        displayapp/screens/WatchFaceAnalog.cpp
+        displayapp/icons/win95/gradient.c
         displayapp/screens/WatchFaceDigital.cpp
-        displayapp/screens/WatchFaceInfineat.cpp
         displayapp/screens/WatchFaceTerminal.cpp
-        displayapp/screens/WatchFacePineTimeStyle.cpp
-        displayapp/screens/WatchFaceCasioStyleG7710.cpp
+        displayapp/screens/WatchFaceWin95.cpp
 
         ##
 
@@ -462,7 +458,6 @@ list(APPEND SOURCE_FILES
         components/ble/AlertNotificationService.cpp
         components/ble/MusicService.cpp
         components/ble/weather/WeatherService.cpp
-        components/ble/NavigationService.cpp
         components/ble/BatteryInformationService.cpp
         components/ble/FSService.cpp
         components/ble/ImmediateAlertService.cpp
@@ -532,7 +527,6 @@ list(APPEND RECOVERY_SOURCE_FILES
         components/ble/FSService.cpp
         components/ble/ImmediateAlertService.cpp
         components/ble/ServiceDiscovery.cpp
-        components/ble/NavigationService.cpp
         components/ble/HeartRateService.cpp
         components/ble/MotionService.cpp
         components/firmwarevalidator/FirmwareValidator.cpp

@@ -175,7 +175,7 @@ void StopWatch::stopLapBtnEventHandler() {
   // If running, then this button is used to save laps
   if (currentState == States::Running) {
     lv_label_set_text(lapText, "");
-    lapsDone = std::min(lapsDone + 1, maxLapCount);
+    lapsDone = std::min(lapsDone + 1, 20);
     for (int i = lapsDone - displayedLaps; i < lapsDone; i++) {
       if (i < 0) {
         lv_label_ins_text(lapText, LV_LABEL_POS_LAST, "\n");

@@ -35,10 +35,10 @@ void Hrs3300::Init() {
   WriteRegister(static_cast<uint8_t>(Registers::PDriver), 0x6E);
 
   // HRS and ALS both in 16-bit mode
-  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x88);
+  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x66);
 
   // 8x gain, non default, reduced value for better readings
-  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0xc);
+  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0xD);
 }
 
 void Hrs3300::Enable() {
@@ -59,6 +59,7 @@ uint32_t Hrs3300::ReadHrs() {
   auto m = ReadRegister(static_cast<uint8_t>(Registers::C0DataM));
   auto h = ReadRegister(static_cast<uint8_t>(Registers::C0DataH));
   auto l = ReadRegister(static_cast<uint8_t>(Registers::C0dataL));
+  
   return ((l & 0x30) << 12) | (m << 8) | ((h & 0x0f) << 4) | (l & 0x0f);
 }
 

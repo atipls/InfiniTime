@@ -1,33 +1,21 @@
 {
-   "teko" : {
+   "lv_font_win95_clock": {
       "sources": [
          {
-            "file": "fonts/Teko-Light.ttf",
-            "symbols": "0123456789:/APMonTueWdhFriSat "
+            "file": "fonts/sysfont.otf",
+            "symbols": "0123456789.: -"
          }
       ],
       "bpp": 1,
-      "size": 28,
+      "size": 60,
       "format": "bin",
       "target_path": "/fonts/"
    },
-   "bebas" : {
+   "lv_font_win95_normal": {
       "sources": [
          {
-            "file": "fonts/BebasNeue-Regular.ttf",
-            "symbols": "0123456789:"
-         }
-      ],
-      "bpp": 1,
-      "size": 120,
-      "format": "bin",
-      "target_path": "/fonts/"
-   },
-   "lv_font_dots_40": {
-      "sources": [
-         {
-            "file": "fonts/repetitionscrolling.ttf",
-            "symbols": "0123456789-MONTUEWEDTHUFRISATSUN WK"
+            "file": "fonts/WindowsRegular.ttf",
+            "symbols": "0123456789.: -APMonTueWdhFriSat"
          }
       ],
       "bpp": 1,
@@ -35,27 +23,15 @@
       "format": "bin",
       "target_path": "/fonts/"
    },
-   "7segments_40" : {
+   "lv_font_win95_small": {
       "sources": [
          {
-            "file": "fonts/7segment.woff",
-            "symbols": "0123456789: -"
+            "file": "fonts/WindowsRegular.ttf",
+            "range": "0x20-0xff"
          }
       ],
       "bpp": 1,
-      "size": 40,
-      "format": "bin",
-      "target_path": "/fonts/"
-   },
-   "7segments_115" : {
-      "sources": [
-         {
-            "file": "fonts/7segment.woff",
-            "symbols": "0123456789: -"
-         }
-      ],
-      "bpp": 1,
-      "size": 115,
+      "size": 12,
       "format": "bin",
       "target_path": "/fonts/"
    }

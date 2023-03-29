@@ -9,8 +9,7 @@
 #include "displayapp/screens/Screen.h"
 #include "displayapp/screens/Symbols.h"
 #include "displayapp/screens/CheckboxList.h"
-#include "displayapp/screens/WatchFaceInfineat.h"
-#include "displayapp/screens/WatchFaceCasioStyleG7710.h"
+#include "displayapp/screens/WatchFaceWin95.h"
 
 namespace Pinetime {
 
@@ -38,17 +37,14 @@ namespace Pinetime {
         static constexpr int settingsPerScreen = 4;
 
         // Increment this when more space is needed
-        static constexpr int nScreens = 2;
+        static constexpr int nScreens = 1;
 
-        std::array<Screens::CheckboxList::Item, settingsPerScreen * nScreens> watchfaces {
-          {{"Digital face", true},
-           {"Analog face", true},
-           {"PineTimeStyle", true},
+        std::array<Screens::CheckboxList::Item, settingsPerScreen * nScreens> watchfaces {{
+           {"Digital face", true},
            {"Terminal", true},
-           {"Infineat face", Applications::Screens::WatchFaceInfineat::IsAvailable(filesystem)},
-           {"Casio G7710", Applications::Screens::WatchFaceCasioStyleG7710::IsAvailable(filesystem)},
+           {"Windows 95", Applications::Screens::WatchFaceWin95::IsAvailable(filesystem)},
            {"", false},
-           {"", false}}};
+        }};
         ScreenList<nScreens> screens;
       };
     }
