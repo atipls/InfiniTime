@@ -9,10 +9,8 @@
 #include "displayapp/screens/CheckboxList.h"
 
 namespace Pinetime {
-
   namespace Applications {
     namespace Screens {
-
       class SettingTimeFormat : public Screen {
       public:
         SettingTimeFormat(Pinetime::Controllers::Settings& settingsController);

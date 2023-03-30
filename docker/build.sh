@@ -24,6 +24,10 @@ MACHINE="$(uname -m)"
 
 export GCC_ARM_PATH="gcc-arm-none-eabi-$GCC_ARM_VER"
 
+export ARM_NONE_EABI_TOOLCHAIN_PATH="$TOOLS_DIR/$GCC_ARM_PATH"
+export NRF5_SDK_PATH="$TOOLS_DIR/$NRF_SDK_VER"
+
+
 main() {
   local target="$1"
 
