@@ -29,6 +29,9 @@ RUN apt-get update -qq \
       libpango-1.0-0 \
       ibpango1.0-dev \
       libpangocairo-1.0-0 \
+      libncurses5 \
+      sudo \
+      openocd \
     && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/*;
@@ -58,6 +61,7 @@ RUN bash -c "source /opt/build.sh; GetNrfSdk;"
 RUN bash -c "source /opt/build.sh; GetMcuBoot;"
 
 RUN adduser infinitime
+RUN adduser infinitime sudo
 
 ENV SOURCES_DIR /sources
 CMD ["/opt/build.sh"]

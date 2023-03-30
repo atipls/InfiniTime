@@ -8,7 +8,6 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				// Set *default* container specific settings.json values on container create.
 				"terminal.integrated.profiles.linux": {
 					"bash": {
 						"path": "/bin/bash"
@@ -16,9 +15,8 @@
 				},
 				"terminal.integrated.defaultProfile.linux": "bash",
 				"editor.formatOnSave": true,
-				"clang-format.executable": "clang-format-15"
+				"clang-format.executable": "clang-format-14"
 			},
-			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-vscode.cpptools",
 				"ms-vscode.cmake-tools",

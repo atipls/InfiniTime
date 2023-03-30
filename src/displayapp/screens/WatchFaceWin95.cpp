@@ -15,13 +15,13 @@
 using namespace Pinetime::Applications::Screens;
 
 WatchFaceWin95::WatchFaceWin95(Controllers::DateTime& dateTimeController,
-                                     const Controllers::Battery& batteryController,
-                                     const Controllers::Ble& bleController,
-                                     Controllers::NotificationManager& notificationManager,
-                                     Controllers::Settings& settingsController,
-                                     Controllers::HeartRateController& heartRateController,
-                                     Controllers::MotionController& motionController,
-                                     Controllers::FS& filesystem)
+                               const Controllers::Battery& batteryController,
+                               const Controllers::Ble& bleController,
+                               Controllers::NotificationManager& notificationManager,
+                               Controllers::Settings& settingsController,
+                               Controllers::HeartRateController& heartRateController,
+                               Controllers::MotionController& motionController,
+                               Controllers::FS& filesystem)
   : currentDateTime {{}},
     dateTimeController {dateTimeController},
     batteryController {batteryController},
@@ -35,19 +35,22 @@ WatchFaceWin95::WatchFaceWin95(Controllers::DateTime& dateTimeController,
   if (filesystem.FileOpen(&f, "/fonts/lv_font_win95_clock.bin", LFS_O_RDONLY) >= 0) {
     filesystem.FileClose(&f);
     font_win95_clock = lv_font_load("F:/fonts/lv_font_win95_clock.bin");
-  } else return;
+  } else
+    return;
 
   if (filesystem.FileOpen(&f, "/fonts/lv_font_win95_normal.bin", LFS_O_RDONLY) >= 0) {
     filesystem.FileClose(&f);
     font_win95_normal = lv_font_load("F:/fonts/lv_font_win95_normal.bin");
-  } else return;
+  } else
+    return;
 
   if (filesystem.FileOpen(&f, "/fonts/lv_font_win95_small.bin", LFS_O_RDONLY) >= 0) {
     filesystem.FileClose(&f);
     font_win95_small = lv_font_load("F:/fonts/lv_font_win95_small.bin");
-  } else return;
+  } else
+    return;
 
-  lv_obj_t *background = lv_obj_create(lv_scr_act(), nullptr);
+  lv_obj_t* background = lv_obj_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_bg_color(background, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_MAKE(184, 184, 184));
   lv_obj_set_style_local_radius(background, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, 0);
   lv_obj_set_size(background, 240, 240);
@@ -96,12 +99,15 @@ WatchFaceWin95::WatchFaceWin95(Controllers::DateTime& dateTimeController,
   Refresh();
 }
 
-WatchFaceWin95::~WatchFaceWin95() { 
+WatchFaceWin95::~WatchFaceWin95() {
   lv_task_del(taskRefresh);
 
-  if (font_win95_clock) lv_font_free(font_win95_clock);
-  if (font_win95_normal) lv_font_free(font_win95_normal);
-  if (font_win95_small) lv_font_free(font_win95_small);
+  if (font_win95_clock)
+    lv_font_free(font_win95_clock);
+  if (font_win95_normal)
+    lv_font_free(font_win95_normal);
+  if (font_win95_small)
+    lv_font_free(font_win95_small);
 
   font_win95_clock = nullptr;
   font_win95_normal = nullptr;
@@ -175,7 +181,6 @@ void WatchFaceWin95::Refresh() {
     lv_obj_realign(label_steps);
   }
 
-
   heartbeat = heartRateController.HeartRate();
   heartbeatRunning = heartRateController.State() != Controllers::HeartRateController::States::Stopped;
   if (heartbeat.IsUpdated() || heartbeatRunning.IsUpdated()) {
@@ -199,7 +204,6 @@ void WatchFaceWin95::Refresh() {
     lv_obj_realign(label_notification);
   }
 
-
   bleState = bleController.IsConnected();
   bleRadioEnabled = bleController.IsRadioEnabled();
   if (bleState.IsUpdated() || bleRadioEnabled.IsUpdated()) {
@@ -208,9 +212,12 @@ void WatchFaceWin95::Refresh() {
     } else {
       lv_label_set_text_static(label_bluetooth, "BT");
 
-      lv_obj_set_style_local_text_color(label_bluetooth, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, bleState.Get() ? LV_COLOR_BLUE : LV_COLOR_BLACK);
+      lv_obj_set_style_local_text_color(label_bluetooth,
+                                        LV_LABEL_PART_MAIN,
+                                        LV_STATE_DEFAULT,
+                                        bleState.Get() ? LV_COLOR_BLUE : LV_COLOR_BLACK);
     }
-  
+
     lv_obj_realign(label_bluetooth);
   }
 }
