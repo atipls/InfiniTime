@@ -390,7 +390,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Weather.cpp
         displayapp/screens/Metronome.cpp
         displayapp/screens/Motion.cpp
-        displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
         displayapp/screens/Twos.cpp
@@ -466,7 +465,6 @@ list(APPEND SOURCE_FILES
         components/ble/ServiceDiscovery.cpp
         components/ble/HeartRateService.cpp
         components/ble/MotionService.cpp
-        components/firmwarevalidator/FirmwareValidator.cpp
         components/motor/MotorController.cpp
         components/settings/Settings.cpp
         components/timer/TimerController.cpp
@@ -485,10 +483,10 @@ list(APPEND SOURCE_FILES
         drivers/TwiMaster.cpp
 
         heartratetask/HeartRateTask.cpp
-        components/heartrate/Ppg.cpp
-        components/heartrate/Biquad.cpp
-        components/heartrate/Ptagc.cpp
         components/heartrate/HeartRateController.cpp
+        components/heartrate/Ppg.cpp
+        libs/interpolation/InterpolationLib.cpp
+        libs/interpolation/arduinoFFT.cpp
 
         buttonhandler/ButtonHandler.cpp
         touchhandler/TouchHandler.cpp
@@ -534,7 +532,6 @@ list(APPEND RECOVERY_SOURCE_FILES
         components/ble/ServiceDiscovery.cpp
         components/ble/HeartRateService.cpp
         components/ble/MotionService.cpp
-        components/firmwarevalidator/FirmwareValidator.cpp
         components/settings/Settings.cpp
         components/timer/TimerController.cpp
         components/alarm/AlarmController.cpp
@@ -551,8 +548,9 @@ list(APPEND RECOVERY_SOURCE_FILES
         components/heartrate/HeartRateController.cpp
         heartratetask/HeartRateTask.cpp
         components/heartrate/Ppg.cpp
-        components/heartrate/Biquad.cpp
-        components/heartrate/Ptagc.cpp
+        libs/interpolation/InterpolationLib.cpp
+        libs/interpolation/arduinoFFT.cpp
+
         components/motor/MotorController.cpp
         components/fs/FS.cpp
         buttonhandler/ButtonHandler.cpp
@@ -604,7 +602,6 @@ set(INCLUDE_FILES
         displayapp/screens/ScreenList.h
         displayapp/screens/Label.h
         displayapp/screens/FirmwareUpdate.h
-        displayapp/screens/FirmwareValidation.h
         displayapp/screens/ApplicationList.h
         displayapp/screens/CheckboxList.h
         displayapp/Apps.h
@@ -636,7 +633,6 @@ set(INCLUDE_FILES
         components/datetime/DateTimeController.h
         components/brightness/BrightnessController.h
         components/motion/MotionController.h
-        components/firmwarevalidator/FirmwareValidator.h
         components/ble/BleController.h
         components/ble/NotificationManager.h
         components/ble/NimbleController.h
@@ -644,7 +640,6 @@ set(INCLUDE_FILES
         components/ble/CurrentTimeClient.h
         components/ble/AlertNotificationClient.h
         components/ble/DfuService.h
-        components/firmwarevalidator/FirmwareValidator.h
         components/ble/BatteryInformationService.h
         components/ble/FSService.h
         components/ble/ImmediateAlertService.h
@@ -667,8 +662,9 @@ set(INCLUDE_FILES
         drivers/TwiMaster.h
         heartratetask/HeartRateTask.h
         components/heartrate/Ppg.h
-        components/heartrate/Biquad.h
-        components/heartrate/Ptagc.h
+	libs/interpolation/InterpolationLib.h
+	libs/interpolation/arduinoFFT.h
+        
         components/heartrate/HeartRateController.h
         components/motor/MotorController.h
         buttonhandler/ButtonHandler.h

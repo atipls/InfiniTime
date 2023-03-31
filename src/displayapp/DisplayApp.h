@@ -9,7 +9,6 @@
 #include "displayapp/TouchEvents.h"
 #include "components/brightness/BrightnessController.h"
 #include "components/motor/MotorController.h"
-#include "components/firmwarevalidator/FirmwareValidator.h"
 #include "components/settings/Settings.h"
 #include "displayapp/screens/Screen.h"
 #include "components/timer/TimerController.h"
@@ -94,7 +93,6 @@ namespace Pinetime {
       Pinetime::Controllers::TouchHandler& touchHandler;
       Pinetime::Controllers::FS& filesystem;
 
-      Pinetime::Controllers::FirmwareValidator validator;
       Pinetime::Components::LittleVgl lvgl;
 
       TaskHandle_t taskHandle;

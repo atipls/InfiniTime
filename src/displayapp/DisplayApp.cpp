@@ -13,7 +13,6 @@
 #include "displayapp/screens/ApplicationList.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/FirmwareUpdate.h"
-#include "displayapp/screens/FirmwareValidation.h"
 #include "displayapp/screens/InfiniPaint.h"
 #include "displayapp/screens/Paddle.h"
 #include "displayapp/screens/StopWatch.h"
@@ -415,10 +414,6 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
 
     case Apps::Error:
       currentScreen = std::make_unique<Screens::Error>(bootError);
-      break;
-
-    case Apps::FirmwareValidation:
-      currentScreen = std::make_unique<Screens::FirmwareValidation>(validator);
       break;
     case Apps::FirmwareUpdate:
       currentScreen = std::make_unique<Screens::FirmwareUpdate>(bleController);

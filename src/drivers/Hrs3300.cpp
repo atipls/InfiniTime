@@ -26,19 +26,10 @@ void Hrs3300::Init() {
   Disable();
   vTaskDelay(100);
 
-  // HRS disabled, 12.5 ms wait time between cycles, (partly) 20mA drive
-  WriteRegister(static_cast<uint8_t>(Registers::Enable), 0x60);
-
-  // (partly) 20mA drive, power on, "magic" (datasheet says both
-  // "reserved" and "set low nibble to 8" but 0xe gives better results
-  // and is used by at least two other HRS3300 drivers
-  WriteRegister(static_cast<uint8_t>(Registers::PDriver), 0x6E);
-
-  // HRS and ALS both in 16-bit mode
-  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x66);
-
-  // 8x gain, non default, reduced value for better readings
-  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0xD);
+  WriteRegister(static_cast<uint8_t>(Registers::Enable), 0x70);
+  WriteRegister(static_cast<uint8_t>(Registers::PDriver), 0x2F);
+  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x88);
+  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0x00);
 }
 
 void Hrs3300::Enable() {
@@ -59,7 +50,7 @@ uint32_t Hrs3300::ReadHrs() {
   auto m = ReadRegister(static_cast<uint8_t>(Registers::C0DataM));
   auto h = ReadRegister(static_cast<uint8_t>(Registers::C0DataH));
   auto l = ReadRegister(static_cast<uint8_t>(Registers::C0dataL));
-  
+
   return ((l & 0x30) << 12) | (m << 8) | ((h & 0x0f) << 4) | (l & 0x0f);
 }
 

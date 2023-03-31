@@ -26,10 +26,12 @@ void HeartRateTask::Process(void* instance) {
 void HeartRateTask::Work() {
   int lastBpm = 0;
   while (true) {
-    auto delay = portMAX_DELAY;
+    Messages msg;
+    uint32_t delay;
+
     if (state == States::Running) {
       if (measurementStarted) {
-        delay = 40;
+        delay = ppg.deltaTms;
       } else {
         delay = 100;
       }
@@ -37,8 +39,7 @@ void HeartRateTask::Work() {
       delay = portMAX_DELAY;
     }
 
-    Messages msg;
-    if (xQueueReceive(messageQueue, &msg, delay) == pdTRUE) {
+    if (xQueueReceive(messageQueue, &msg, delay)) {
       switch (msg) {
         case Messages::GoToSleep:
           StopMeasurement();
@@ -70,11 +71,21 @@ void HeartRateTask::Work() {
     }
 
     if (measurementStarted) {
-      ppg.Preprocess(static_cast<float>(heartRateSensor.ReadHrs()));
-      auto bpm = ppg.HeartRate();
+      int8_t ambient = ppg.Preprocess(heartRateSensor.ReadHrs(), heartRateSensor.ReadAls());
+      int bpm = ppg.HeartRate();
+
+      if (ambient > 0) {
+        ppg.Reset(true);
+        lastBpm = 0;
+        bpm = 0;
+      } else if (bpm < 0) {
+        ppg.Reset(false);
+        bpm = 0;
+        controller.Update(Controllers::HeartRateController::States::Running, bpm);
+      }
 
       if (lastBpm == 0 && bpm == 0) {
-        controller.Update(Controllers::HeartRateController::States::NotEnoughData, 0);
+        controller.Update(Controllers::HeartRateController::States::NotEnoughData, bpm);
       }
       if (bpm != 0) {
         lastBpm = bpm;
@@ -95,11 +106,12 @@ void HeartRateTask::PushMessage(HeartRateTask::Messages msg) {
 
 void HeartRateTask::StartMeasurement() {
   heartRateSensor.Enable();
+  ppg.Reset(true);
   vTaskDelay(100);
-  ppg.SetOffset(heartRateSensor.ReadHrs());
 }
 
 void HeartRateTask::StopMeasurement() {
   heartRateSensor.Disable();
+  ppg.Reset(true);
   vTaskDelay(100);
 }

@@ -8,7 +8,6 @@ namespace Pinetime {
       Clock,
       SysInfo,
       FirmwareUpdate,
-      FirmwareValidation,
       NotificationsPreview,
       Notifications,
       Timer,

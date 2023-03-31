@@ -43,9 +43,9 @@ namespace Pinetime {
           {Symbols::clock, "Chimes", Apps::SettingChimes},
 
           {Symbols::tachometer, "Shake Calib.", Apps::SettingShakeThreshold},
-          {Symbols::check, "Firmware", Apps::FirmwareValidation},
           {Symbols::bluetooth, "Bluetooth", Apps::SettingBluetooth},
           {Symbols::list, "About", Apps::SysInfo},
+          {Symbols::none, "", Apps::None},
 
           // {Symbols::none, "None", Apps::None},
           // {Symbols::none, "None", Apps::None},
