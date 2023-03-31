@@ -83,6 +83,7 @@ Pinetime::Drivers::Cst816S touchPanel {twiMaster, touchPanelTwiAddress};
   #include "displayapp/DisplayAppRecovery.h"
 #else
   #include "displayapp/DisplayApp.h"
+  #include "main.h"
 #endif
 Pinetime::Drivers::Bma421 motionSensor {twiMaster, motionSensorTwiAddress};
 Pinetime::Drivers::Hrs3300 heartRateSensor {twiMaster, heartRateSensorTwiAddress};
@@ -148,6 +149,9 @@ Pinetime::System::SystemTask systemTask(spi,
                                         touchHandler,
                                         buttonHandler);
 
+int mallocFailedCount = 0;
+int stackOverflowCount = 0;
+
 /* Variable Declarations for variables in noinit SRAM
    Increment NoInit_MagicValue upon adding variables to this area
 */
@@ -156,6 +160,16 @@ extern uint32_t __stop_noinit_data;
 static constexpr uint32_t NoInit_MagicValue = 0xDEAD0000;
 uint32_t NoInit_MagicWord __attribute__((section(".noinit")));
 std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> NoInit_BackUpTime __attribute__((section(".noinit")));
+
+extern "C" {
+void vApplicationMallocFailedHook() {
+  mallocFailedCount++;
+}
+
+void vApplicationStackOverflowHook(TaskHandle_t /*xTask*/, char* /*pcTaskName*/) {
+  stackOverflowCount++;
+}
+}
 
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
   if (pin == Pinetime::PinMap::Cst816sIrq) {

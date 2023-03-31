@@ -3,6 +3,8 @@
     "cmake.configureArgs": [
         "-DARM_NONE_EABI_TOOLCHAIN_PATH=${env:TOOLS_DIR}/${env:GCC_ARM_PATH}",
         "-DNRF5_SDK_PATH=${env:TOOLS_DIR}/${env:NRF_SDK_VER}",
+        "-DBUILD_DFU=1",
+        "-DBUILD_RESOURCES=1"
     ],
     "cmake.generator": "Unix Makefiles",
     "cmake.statusbar.advanced": {
@@ -65,6 +67,7 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "gradient.c": "cpp"
     },
 }
