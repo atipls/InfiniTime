@@ -3,9 +3,9 @@
 using namespace Pinetime::Applications::Screens;
 
 const char* BleIcon::GetIcon(bool isConnected) {
-  if (isConnected) {
-    return Symbols::bluetooth;
-  }
+    if (isConnected) {
+        return Symbols::bluetooth;
+    }
 
-  return Symbols::none;
+    return Symbols::none;
 }

@@ -8,31 +8,31 @@
 
 namespace Pinetime {
 
-  namespace Applications {
-    namespace Screens {
+    namespace Applications {
+        namespace Screens {
 
-      class FlashLight : public Screen {
-      public:
-        FlashLight(System::SystemTask& systemTask, Controllers::BrightnessController& brightness);
-        ~FlashLight() override;
+            class FlashLight : public Screen {
+              public:
+                FlashLight(System::SystemTask& systemTask, Controllers::BrightnessController& brightness);
+                ~FlashLight() override;
 
-        bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
-        void Toggle();
+                bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
+                void Toggle();
 
-      private:
-        void SetIndicators();
-        void SetColors();
+              private:
+                void SetIndicators();
+                void SetColors();
 
-        Pinetime::System::SystemTask& systemTask;
-        Controllers::BrightnessController& brightnessController;
+                Pinetime::System::SystemTask& systemTask;
+                Controllers::BrightnessController& brightnessController;
 
-        Controllers::BrightnessController::Levels brightnessLevel = Controllers::BrightnessController::Levels::High;
+                Controllers::BrightnessController::Levels brightnessLevel = Controllers::BrightnessController::Levels::High;
 
-        lv_obj_t* flashLight;
-        lv_obj_t* backgroundAction;
-        lv_obj_t* indicators[3];
-        bool isOn = false;
-      };
+                lv_obj_t* flashLight;
+                lv_obj_t* backgroundAction;
+                lv_obj_t* indicators[3];
+                bool isOn = false;
+            };
+        }
     }
-  }
 }

@@ -9,13 +9,11 @@ using namespace Pinetime::Applications::Screens;
 constexpr std::array<Tile::Applications, ApplicationList::applications.size()> ApplicationList::applications;
 
 auto ApplicationList::CreateScreenList() const {
-  std::array<std::function<std::unique_ptr<Screen>()>, nScreens> screens;
-  for (size_t i = 0; i < screens.size(); i++) {
-    screens[i] = [this, i]() -> std::unique_ptr<Screen> {
-      return CreateScreen(i);
-    };
-  }
-  return screens;
+    std::array<std::function<std::unique_ptr<Screen>()>, nScreens> screens;
+    for (size_t i = 0; i < screens.size(); i++) {
+        screens[i] = [this, i]() -> std::unique_ptr<Screen> { return CreateScreen(i); };
+    }
+    return screens;
 }
 
 ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp* app,
@@ -28,29 +26,24 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp* app,
     batteryController {batteryController},
     bleController {bleController},
     dateTimeController {dateTimeController},
-    screens {app, settingsController.GetAppMenu(), CreateScreenList(), Screens::ScreenListModes::UpDown} {
-}
+    screens {app, settingsController.GetAppMenu(), CreateScreenList(), Screens::ScreenListModes::UpDown} {}
 
-ApplicationList::~ApplicationList() {
-  lv_obj_clean(lv_scr_act());
-}
+ApplicationList::~ApplicationList() { lv_obj_clean(lv_scr_act()); }
 
-bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
-  return screens.OnTouchEvent(event);
-}
+bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) { return screens.OnTouchEvent(event); }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen(unsigned int screenNum) const {
-  std::array<Tile::Applications, appsPerScreen> apps;
-  for (int i = 0; i < appsPerScreen; i++) {
-    apps[i] = applications[screenNum * appsPerScreen + i];
-  }
+    std::array<Tile::Applications, appsPerScreen> apps;
+    for (int i = 0; i < appsPerScreen; i++) {
+        apps[i] = applications[screenNum * appsPerScreen + i];
+    }
 
-  return std::make_unique<Screens::Tile>(screenNum,
-                                         nScreens,
-                                         app,
-                                         settingsController,
-                                         batteryController,
-                                         bleController,
-                                         dateTimeController,
-                                         apps);
+    return std::make_unique<Screens::Tile>(screenNum,
+                                           nScreens,
+                                           app,
+                                           settingsController,
+                                           batteryController,
+                                           bleController,
+                                           dateTimeController,
+                                           apps);
 }

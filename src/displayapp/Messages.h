@@ -2,29 +2,29 @@
 #include <cstdint>
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Display {
-      enum class Messages : uint8_t {
-        GoToSleep,
-        GoToRunning,
-        UpdateDateTime,
-        UpdateBleConnection,
-        TouchEvent,
-        ButtonPushed,
-        ButtonLongPressed,
-        ButtonLongerPressed,
-        ButtonDoubleClicked,
-        NewNotification,
-        TimerDone,
-        BleFirmwareUpdateStarted,
-        DimScreen,
-        RestoreBrightness,
-        ShowPairingKey,
-        AlarmTriggered,
-        Chime,
-        BleRadioEnableToggle,
-        OnChargingEvent,
-      };
+    namespace Applications {
+        namespace Display {
+            enum class Messages : uint8_t {
+                GoToSleep,
+                GoToRunning,
+                UpdateDateTime,
+                UpdateBleConnection,
+                TouchEvent,
+                ButtonPushed,
+                ButtonLongPressed,
+                ButtonLongerPressed,
+                ButtonDoubleClicked,
+                NewNotification,
+                TimerDone,
+                BleFirmwareUpdateStarted,
+                DimScreen,
+                RestoreBrightness,
+                ShowPairingKey,
+                AlarmTriggered,
+                Chime,
+                BleRadioEnableToggle,
+                OnChargingEvent,
+            };
+        }
     }
-  }
 }

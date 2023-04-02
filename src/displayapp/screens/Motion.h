@@ -8,27 +8,27 @@
 #include <components/motion/MotionController.h>
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Screens {
+    namespace Applications {
+        namespace Screens {
 
-      class Motion : public Screen {
-      public:
-        Motion(Controllers::MotionController& motionController);
-        ~Motion() override;
+            class Motion : public Screen {
+              public:
+                Motion(Controllers::MotionController& motionController);
+                ~Motion() override;
 
-        void Refresh() override;
+                void Refresh() override;
 
-      private:
-        Controllers::MotionController& motionController;
-        lv_obj_t* chart;
-        lv_chart_series_t* ser1;
-        lv_chart_series_t* ser2;
-        lv_chart_series_t* ser3;
-        lv_obj_t* label;
+              private:
+                Controllers::MotionController& motionController;
+                lv_obj_t* chart;
+                lv_chart_series_t* ser1;
+                lv_chart_series_t* ser2;
+                lv_chart_series_t* ser3;
+                lv_obj_t* label;
 
-        lv_obj_t* labelStep;
-        lv_task_t* taskRefresh;
-      };
+                lv_obj_t* labelStep;
+                lv_task_t* taskRefresh;
+            };
+        }
     }
-  }
 }

@@ -6,31 +6,28 @@
 #include <chrono>
 
 namespace Pinetime {
-  namespace System {
-    class SystemTask;
-  }
+    namespace System {
+        class SystemTask;
+    }
 
-  namespace Controllers {
+    namespace Controllers {
 
-    class TimerController {
-    public:
-      TimerController() = default;
+        class TimerController {
+          public:
+            TimerController() = default;
 
-      void Init(System::SystemTask* systemTask);
+            void Init(System::SystemTask* systemTask);
+            void StartTimer(std::chrono::milliseconds duration);
+            void StopTimer();
 
-      void StartTimer(std::chrono::milliseconds duration);
+            std::chrono::milliseconds GetTimeRemaining();
 
-      void StopTimer();
+            bool IsRunning();
+            void OnTimerEnd();
 
-      std::chrono::milliseconds GetTimeRemaining();
-
-      bool IsRunning();
-
-      void OnTimerEnd();
-
-    private:
-      System::SystemTask* systemTask = nullptr;
-      TimerHandle_t timer;
-    };
-  }
+          private:
+            System::SystemTask* systemTask = nullptr;
+            TimerHandle_t timer;
+        };
+    }
 }

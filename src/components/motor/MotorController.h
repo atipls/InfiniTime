@@ -5,22 +5,22 @@
 #include <cstdint>
 
 namespace Pinetime {
-  namespace Controllers {
+    namespace Controllers {
 
-    class MotorController {
-    public:
-      MotorController() = default;
+        class MotorController {
+          public:
+            MotorController() = default;
 
-      void Init();
-      void RunForDuration(uint8_t motorDuration);
-      void StartRinging();
-      void StopRinging();
+            void Init();
+            void RunForDuration(uint8_t motorDuration);
+            void StartRinging();
+            void StopRinging();
 
-    private:
-      static void Ring(TimerHandle_t xTimer);
-      static void StopMotor(TimerHandle_t xTimer);
-      TimerHandle_t shortVib;
-      TimerHandle_t longVib;
-    };
-  }
+          private:
+            static void Ring(TimerHandle_t xTimer);
+            static void StopMotor(TimerHandle_t xTimer);
+            TimerHandle_t shortVib;
+            TimerHandle_t longVib;
+        };
+    }
 }

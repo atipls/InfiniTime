@@ -9,23 +9,19 @@ constexpr ble_uuid16_t ImmediateAlertService::immediateAlertServiceUuid;
 constexpr ble_uuid16_t ImmediateAlertService::alertLevelUuid;
 
 namespace {
-  int AlertLevelCallback(uint16_t /*conn_handle*/, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg) {
-    auto* immediateAlertService = static_cast<ImmediateAlertService*>(arg);
-    return immediateAlertService->OnAlertLevelChanged(attr_handle, ctxt);
-  }
-
-  const char* ToString(ImmediateAlertService::Levels level) {
-    switch (level) {
-      case ImmediateAlertService::Levels::NoAlert:
-        return "Alert : None";
-      case ImmediateAlertService::Levels::HighAlert:
-        return "Alert : High";
-      case ImmediateAlertService::Levels::MildAlert:
-        return "Alert : Mild";
-      default:
-        return "";
+    int AlertLevelCallback(uint16_t /*conn_handle*/, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg) {
+        auto* immediateAlertService = static_cast<ImmediateAlertService*>(arg);
+        return immediateAlertService->OnAlertLevelChanged(attr_handle, ctxt);
     }
-  }
+
+    const char* ToString(ImmediateAlertService::Levels level) {
+        switch (level) {
+            case ImmediateAlertService::Levels::NoAlert: return "Alert : None";
+            case ImmediateAlertService::Levels::HighAlert: return "Alert : High";
+            case ImmediateAlertService::Levels::MildAlert: return "Alert : Mild";
+            default: return "";
+        }
+    }
 }
 
 ImmediateAlertService::ImmediateAlertService(Pinetime::System::SystemTask& systemTask,
@@ -44,32 +40,31 @@ ImmediateAlertService::ImmediateAlertService(Pinetime::System::SystemTask& syste
        .uuid = &immediateAlertServiceUuid.u,
        .characteristics = characteristicDefinition},
       {0},
-    } {
-}
+    } {}
 
 void ImmediateAlertService::Init() {
-  int res = 0;
-  res = ble_gatts_count_cfg(serviceDefinition);
-  ASSERT(res == 0);
+    int res = 0;
+    res = ble_gatts_count_cfg(serviceDefinition);
+    ASSERT(res == 0);
 
-  res = ble_gatts_add_svcs(serviceDefinition);
-  ASSERT(res == 0);
+    res = ble_gatts_add_svcs(serviceDefinition);
+    ASSERT(res == 0);
 }
 
 int ImmediateAlertService::OnAlertLevelChanged(uint16_t attributeHandle, ble_gatt_access_ctxt* context) {
-  if (attributeHandle == alertLevelHandle) {
-    if (context->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
-      auto alertLevel = static_cast<Levels>(context->om->om_data[0]);
-      auto* alertString = ToString(alertLevel);
+    if (attributeHandle == alertLevelHandle) {
+        if (context->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
+            auto alertLevel = static_cast<Levels>(context->om->om_data[0]);
+            auto* alertString = ToString(alertLevel);
 
-      NotificationManager::Notification notif;
-      std::memcpy(notif.message.data(), alertString, strlen(alertString));
-      notif.category = Pinetime::Controllers::NotificationManager::Categories::SimpleAlert;
-      notificationManager.Push(std::move(notif));
+            NotificationManager::Notification notif;
+            std::memcpy(notif.message.data(), alertString, strlen(alertString));
+            notif.category = Pinetime::Controllers::NotificationManager::Categories::SimpleAlert;
+            notificationManager.Push(std::move(notif));
 
-      systemTask.PushMessage(Pinetime::System::Messages::OnNewNotification);
+            systemTask.PushMessage(Pinetime::System::Messages::OnNewNotification);
+        }
     }
-  }
 
-  return 0;
+    return 0;
 }

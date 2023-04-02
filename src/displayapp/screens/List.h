@@ -11,34 +11,31 @@
 #define MAXLISTITEMS 4
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Screens {
-      class List : public Screen {
-      public:
-        struct Applications {
-          const char* icon;
-          const char* name;
-          Pinetime::Applications::Apps application;
-        };
+    namespace Applications {
+        namespace Screens {
+            class List : public Screen {
+              public:
+                struct Applications {
+                    const char* icon;
+                    const char* name;
+                    Pinetime::Applications::Apps application;
+                };
 
-        explicit List(uint8_t screenID,
-                      uint8_t numScreens,
-                      DisplayApp* app,
-                      Controllers::Settings& settingsController,
-                      std::array<Applications, MAXLISTITEMS>& applications);
-        ~List() override;
+                explicit List(uint8_t screenID, uint8_t numScreens, DisplayApp* app, Controllers::Settings& settingsController,
+                              std::array<Applications, MAXLISTITEMS>& applications);
+                ~List() override;
 
-        void OnButtonEvent(lv_obj_t* object, lv_event_t event);
+                void OnButtonEvent(lv_obj_t* object, lv_event_t event);
 
-      private:
-        DisplayApp* app;
-        Controllers::Settings& settingsController;
-        Pinetime::Applications::Apps apps[MAXLISTITEMS];
+              private:
+                DisplayApp* app;
+                Controllers::Settings& settingsController;
+                Pinetime::Applications::Apps apps[MAXLISTITEMS];
 
-        lv_obj_t* itemApps[MAXLISTITEMS];
+                lv_obj_t* itemApps[MAXLISTITEMS];
 
-        Widgets::PageIndicator pageIndicator;
-      };
+                Widgets::PageIndicator pageIndicator;
+            };
+        }
     }
-  }
 }

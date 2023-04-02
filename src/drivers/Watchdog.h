@@ -2,23 +2,31 @@
 #include <cstdint>
 
 namespace Pinetime {
-  namespace Drivers {
-    class Watchdog {
-    public:
-      enum class ResetReasons { ResetPin, Watchdog, SoftReset, CpuLockup, SystemOff, LpComp, DebugInterface, NFC, HardReset };
-      void Setup(uint8_t timeoutSeconds);
-      void Start();
-      void Kick();
+    namespace Drivers {
+        class Watchdog {
+          public:
+            enum class ResetReasons {
+                ResetPin,
+                Watchdog,
+                SoftReset,
+                CpuLockup,
+                SystemOff,
+                LpComp,
+                DebugInterface,
+                NFC,
+                HardReset,
+            };
+            void Setup(uint8_t timeoutSeconds);
+            void Start();
+            void Kick();
 
-      ResetReasons ResetReason() const {
-        return resetReason;
-      }
+            ResetReasons ResetReason() const { return resetReason; }
 
-      static const char* ResetReasonToString(ResetReasons reason);
+            static const char* ResetReasonToString(ResetReasons reason);
 
-    private:
-      ResetReasons resetReason;
-      ResetReasons ActualResetReason() const;
-    };
-  }
+          private:
+            ResetReasons resetReason;
+            ResetReasons ActualResetReason() const;
+        };
+    }
 }

@@ -5,18 +5,18 @@
 #include <lvgl/lvgl.h>
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Screens {
+    namespace Applications {
+        namespace Screens {
 
-      class Label : public Screen {
-      public:
-        Label(uint8_t screenID, uint8_t numScreens, lv_obj_t* labelText);
-        ~Label() override;
+            class Label : public Screen {
+              public:
+                Label(uint8_t screenID, uint8_t numScreens, lv_obj_t* labelText);
+                ~Label() override;
 
-      private:
-        lv_obj_t* labelText = nullptr;
-        Widgets::PageIndicator pageIndicator;
-      };
+              private:
+                lv_obj_t* labelText = nullptr;
+                Widgets::PageIndicator pageIndicator;
+            };
+        }
     }
-  }
 }

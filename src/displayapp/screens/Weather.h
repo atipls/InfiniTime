@@ -6,40 +6,36 @@
 #include "ScreenList.h"
 
 namespace Pinetime {
-  namespace Applications {
-    class DisplayApp;
+    namespace Applications {
+        class DisplayApp;
 
-    namespace Screens {
-      class Weather : public Screen {
-      public:
-        explicit Weather(DisplayApp* app, Pinetime::Controllers::WeatherService& weather);
+        namespace Screens {
+            class Weather : public Screen {
+              public:
+                explicit Weather(DisplayApp* app, Pinetime::Controllers::WeatherService& weather);
 
-        ~Weather() override;
+                ~Weather() override;
 
-        void Refresh() override;
+                void Refresh() override;
 
-        bool OnButtonPushed() override;
+                bool OnButtonPushed() override;
 
-        bool OnTouchEvent(TouchEvents event) override;
+                bool OnTouchEvent(TouchEvents event) override;
 
-      private:
-        DisplayApp* app;
-        bool running = true;
+              private:
+                DisplayApp* app;
+                bool running = true;
 
-        Controllers::WeatherService& weatherService;
+                Controllers::WeatherService& weatherService;
 
-        ScreenList<5> screens;
+                ScreenList<5> screens;
 
-        std::unique_ptr<Screen> CreateScreenTemperature();
-
-        std::unique_ptr<Screen> CreateScreenAir();
-
-        std::unique_ptr<Screen> CreateScreenClouds();
-
-        std::unique_ptr<Screen> CreateScreenPrecipitation();
-
-        std::unique_ptr<Screen> CreateScreenHumidity();
-      };
+                std::unique_ptr<Screen> CreateScreenTemperature();
+                std::unique_ptr<Screen> CreateScreenAir();
+                std::unique_ptr<Screen> CreateScreenClouds();
+                std::unique_ptr<Screen> CreateScreenPrecipitation();
+                std::unique_ptr<Screen> CreateScreenHumidity();
+            };
+        }
     }
-  }
 }

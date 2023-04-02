@@ -24,45 +24,43 @@
 #include "displayapp/widgets/Counter.h"
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Screens {
-      class Alarm : public Screen {
-      public:
-        Alarm(Controllers::AlarmController& alarmController,
-              Controllers::Settings::ClockType clockType,
-              System::SystemTask& systemTask,
-              Controllers::MotorController& motorController);
-        ~Alarm() override;
-        void SetAlerting();
-        void OnButtonEvent(lv_obj_t* obj, lv_event_t event);
-        bool OnButtonPushed() override;
-        bool OnTouchEvent(TouchEvents event) override;
-        void OnValueChanged();
-        void StopAlerting();
+    namespace Applications {
+        namespace Screens {
+            class Alarm : public Screen {
+              public:
+                Alarm(Controllers::AlarmController& alarmController, Controllers::Settings::ClockType clockType,
+                      System::SystemTask& systemTask, Controllers::MotorController& motorController);
+                ~Alarm() override;
+                void SetAlerting();
+                void OnButtonEvent(lv_obj_t* obj, lv_event_t event);
+                bool OnButtonPushed() override;
+                bool OnTouchEvent(TouchEvents event) override;
+                void OnValueChanged();
+                void StopAlerting();
 
-      private:
-        Controllers::AlarmController& alarmController;
-        System::SystemTask& systemTask;
-        Controllers::MotorController& motorController;
+              private:
+                Controllers::AlarmController& alarmController;
+                System::SystemTask& systemTask;
+                Controllers::MotorController& motorController;
 
-        lv_obj_t *btnStop, *txtStop, *btnRecur, *txtRecur, *btnInfo, *enableSwitch;
-        lv_obj_t* lblampm = nullptr;
-        lv_obj_t* txtMessage = nullptr;
-        lv_obj_t* btnMessage = nullptr;
-        lv_task_t* taskStopAlarm = nullptr;
+                lv_obj_t *btnStop, *txtStop, *btnRecur, *txtRecur, *btnInfo, *enableSwitch;
+                lv_obj_t* lblampm = nullptr;
+                lv_obj_t* txtMessage = nullptr;
+                lv_obj_t* btnMessage = nullptr;
+                lv_task_t* taskStopAlarm = nullptr;
 
-        enum class EnableButtonState { On, Off, Alerting };
-        void DisableAlarm();
-        void SetRecurButtonState();
-        void SetSwitchState(lv_anim_enable_t anim);
-        void SetAlarm();
-        void ShowInfo();
-        void HideInfo();
-        void ToggleRecurrence();
-        void UpdateAlarmTime();
-        Widgets::Counter hourCounter = Widgets::Counter(0, 23, jetbrains_mono_76);
-        Widgets::Counter minuteCounter = Widgets::Counter(0, 59, jetbrains_mono_76);
-      };
+                enum class EnableButtonState { On, Off, Alerting };
+                void DisableAlarm();
+                void SetRecurButtonState();
+                void SetSwitchState(lv_anim_enable_t anim);
+                void SetAlarm();
+                void ShowInfo();
+                void HideInfo();
+                void ToggleRecurrence();
+                void UpdateAlarmTime();
+                Widgets::Counter hourCounter = Widgets::Counter(0, 23, jetbrains_mono_76);
+                Widgets::Counter minuteCounter = Widgets::Counter(0, 59, jetbrains_mono_76);
+            };
+        };
     };
-  };
 }

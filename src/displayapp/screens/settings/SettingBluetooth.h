@@ -10,18 +10,18 @@
 
 namespace Pinetime {
 
-  namespace Applications {
-    namespace Screens {
+    namespace Applications {
+        namespace Screens {
 
-      class SettingBluetooth : public Screen {
-      public:
-        SettingBluetooth(DisplayApp* app, Pinetime::Controllers::Settings& settingsController);
-        ~SettingBluetooth() override;
+            class SettingBluetooth : public Screen {
+              public:
+                SettingBluetooth(DisplayApp* app, Pinetime::Controllers::Settings& settingsController);
+                ~SettingBluetooth() override;
 
-      private:
-        DisplayApp* app;
-        CheckboxList checkboxList;
-      };
+              private:
+                DisplayApp* app;
+                CheckboxList checkboxList;
+            };
+        }
     }
-  }
 }

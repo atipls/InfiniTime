@@ -2,14 +2,12 @@
 #include "logging/Logger.h"
 
 namespace Pinetime {
-  namespace Logging {
-    class DummyLogger : public Logger {
-    public:
-      void Init() override {
-      }
+    namespace Logging {
+        class DummyLogger : public Logger {
+          public:
+            void Init() override {}
 
-      void Resume() override {
-      }
-    };
-  }
+            void Resume() override {}
+        };
+    }
 }

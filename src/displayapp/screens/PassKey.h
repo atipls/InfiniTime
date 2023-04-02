@@ -4,17 +4,17 @@
 #include <lvgl/lvgl.h>
 
 namespace Pinetime {
-  namespace Applications {
-    namespace Screens {
+    namespace Applications {
+        namespace Screens {
 
-      class PassKey : public Screen {
-      public:
-        explicit PassKey(uint32_t key);
-        ~PassKey() override;
+            class PassKey : public Screen {
+              public:
+                explicit PassKey(uint32_t key);
+                ~PassKey() override;
 
-      private:
-        lv_obj_t* passkeyLabel;
-      };
+              private:
+                lv_obj_t* passkeyLabel;
+            };
+        }
     }
-  }
 }
