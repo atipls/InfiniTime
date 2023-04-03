@@ -26,7 +26,6 @@
 #include "displayapp/screens/BatteryInfo.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/PassKey.h"
-#include "displayapp/screens/Error.h"
 #include "displayapp/screens/Weather.h"
 
 #include "drivers/Cst816s.h"
@@ -82,18 +81,12 @@ DisplayApp::DisplayApp(Drivers::St7789& lcd, const Drivers::Cst816S& touchPanel,
     filesystem {filesystem},
     lvgl {lcd, filesystem} {}
 
-void DisplayApp::Start(System::BootErrors error) {
+void DisplayApp::Start() {
     msgQueue = xQueueCreate(queueSize, itemSize);
-
-    bootError = error;
 
     lvgl.Init();
 
-    if (error == System::BootErrors::TouchController) {
-        LoadNewScreen(Apps::Error, DisplayApp::FullRefreshDirections::None);
-    } else {
-        LoadNewScreen(Apps::Clock, DisplayApp::FullRefreshDirections::None);
-    }
+    LoadNewScreen(Apps::Clock, DisplayApp::FullRefreshDirections::None);
 
     if (pdPASS != xTaskCreate(DisplayApp::Process, "displayapp", 800, this, 0, &taskHandle)) {
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
@@ -364,7 +357,6 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
                                                              filesystem);
             break;
 
-        case Apps::Error: currentScreen = std::make_unique<Screens::Error>(bootError); break;
         case Apps::FirmwareUpdate: currentScreen = std::make_unique<Screens::FirmwareUpdate>(bleController); break;
 
         case Apps::PassKey: currentScreen = std::make_unique<Screens::PassKey>(bleController.GetPairingKey()); break;

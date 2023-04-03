@@ -1,9 +1,8 @@
 #include "systemtask/SystemTask.h"
-#if configUSE_TRACE_FACILITY == 1
-    // FreeRtosMonitor
-    #include <FreeRTOS.h>
-    #include <task.h>
-    #include <nrf_log.h>
+
+#include <FreeRTOS.h>
+#include <task.h>
+#include <nrf_log.h>
 
 void Pinetime::System::SystemMonitor::Process() {
     if (xTaskGetTickCount() - lastTick > 10000) {
@@ -20,7 +19,3 @@ void Pinetime::System::SystemMonitor::Process() {
         lastTick = xTaskGetTickCount();
     }
 }
-#else
-// DummyMonitor
-void Pinetime::System::SystemMonitor::Process() {}
-#endif

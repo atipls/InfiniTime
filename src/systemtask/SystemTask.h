@@ -22,12 +22,8 @@
 #include "buttonhandler/ButtonHandler.h"
 #include "buttonhandler/ButtonActions.h"
 
-#ifdef PINETIME_IS_RECOVERY
-    #include "displayapp/DisplayAppRecovery.h"
-#else
-    #include "components/settings/Settings.h"
-    #include "displayapp/DisplayApp.h"
-#endif
+#include "components/settings/Settings.h"
+#include "displayapp/DisplayApp.h"
 
 #include "drivers/Watchdog.h"
 #include "systemtask/Messages.h"

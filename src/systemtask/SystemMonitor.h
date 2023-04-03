@@ -1,5 +1,5 @@
 #pragma once
-#include <FreeRTOS.h> // declares configUSE_TRACE_FACILITY
+#include <FreeRTOS.h>
 #include <task.h>
 
 namespace Pinetime {
@@ -7,10 +7,9 @@ namespace Pinetime {
         class SystemMonitor {
           public:
             void Process();
-#if configUSE_TRACE_FACILITY == 1
+
           private:
             mutable TickType_t lastTick = 0;
-#endif
         };
     }
 }

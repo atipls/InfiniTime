@@ -2,7 +2,6 @@
 #include <hal/nrf_rtc.h>
 #include <libraries/gpiote/app_gpiote.h>
 #include <libraries/log/nrf_log.h>
-#include "BootloaderVersion.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "displayapp/TouchEvents.h"
@@ -15,7 +14,6 @@
 #include "drivers/Hrs3300.h"
 #include "drivers/PinMap.h"
 #include "main.h"
-#include "BootErrors.h"
 
 #include <memory>
 
@@ -78,8 +76,6 @@ void SystemTask::Process(void* instance) {
 }
 
 void SystemTask::Work() {
-    BootErrors bootError = BootErrors::None;
-
     watchdog.Setup(7);
     watchdog.Start();
     NRF_LOG_INFO("Last reset reason : %s", Pinetime::Drivers::Watchdog::ResetReasonToString(watchdog.ResetReason()));
@@ -94,14 +90,7 @@ void SystemTask::Work() {
     nimbleController.Init();
 
     twiMaster.Init();
-    /*
-     * TODO We disable this warning message until we ensure it won't be displayed
-     * on legitimate PineTime equipped with a compatible touch controller.
-     * (some users reported false positive). See https://github.com/InfiniTimeOrg/InfiniTime/issues/763
-    if (!touchPanel.Init()) {
-      bootError = BootErrors::TouchController;
-    }
-     */
+
     touchPanel.Init();
     dateTimeController.Register(this);
     batteryController.Register(this);
@@ -118,7 +107,7 @@ void SystemTask::Work() {
     settingsController.Init();
 
     displayApp.Register(this);
-    displayApp.Start(bootError);
+    displayApp.Start();
 
     heartRateSensor.Init();
     heartRateSensor.Disable();
@@ -301,11 +290,7 @@ void SystemTask::Work() {
                     HandleButtonAction(action);
                 } break;
                 case Messages::OnDisplayTaskSleeping:
-                    if (BootloaderVersion::IsValid()) {
-                        // First versions of the bootloader do not expose their version and cannot initialize the SPI NOR FLASH
-                        // if it's in sleep mode. Avoid bricked device by disabling sleep mode on these versions.
-                        spiNorFlash.Sleep();
-                    }
+                    spiNorFlash.Sleep();
                     spi.Sleep();
 
                     // Double Tap needs the touch screen to be in normal mode

@@ -371,7 +371,6 @@ list(APPEND SOURCE_FILES
         stdlib.c
         FreeRTOS/heap_infinitime.c
 
-        BootloaderVersion.cpp
         logging/NrfLogger.cpp
         displayapp/DisplayApp.cpp
         displayapp/screens/Screen.cpp
@@ -402,7 +401,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Steps.cpp
         displayapp/screens/Timer.cpp
         displayapp/screens/PassKey.cpp
-        displayapp/screens/Error.cpp
         displayapp/screens/Alarm.cpp
         displayapp/screens/Styles.cpp
         displayapp/widgets/Counter.cpp
@@ -491,98 +489,7 @@ list(APPEND SOURCE_FILES
         touchhandler/TouchHandler.cpp
         )
 
-list(APPEND RECOVERY_SOURCE_FILES
-        stdlib.c
-        FreeRTOS/heap_infinitime.c
-
-        BootloaderVersion.cpp
-        logging/NrfLogger.cpp
-        displayapp/DisplayAppRecovery.cpp
-
-        main.cpp
-        drivers/St7789.cpp
-        drivers/SpiNorFlash.cpp
-        drivers/SpiMaster.cpp
-        drivers/Spi.cpp
-        drivers/Watchdog.cpp
-        drivers/InternalFlash.cpp
-        drivers/Hrs3300.cpp
-        drivers/Bma421.cpp
-        drivers/Bma421_C/bma4.c
-        drivers/Bma421_C/bma423.c
-        components/battery/BatteryController.cpp
-        components/ble/BleController.cpp
-        components/ble/NotificationManager.cpp
-        components/datetime/DateTimeController.cpp
-        components/brightness/BrightnessController.cpp
-        components/motion/MotionController.cpp
-        components/ble/NimbleController.cpp
-        components/ble/DeviceInformationService.cpp
-        components/ble/CurrentTimeClient.cpp
-        components/ble/AlertNotificationClient.cpp
-        components/ble/DfuService.cpp
-        components/ble/CurrentTimeService.cpp
-        components/ble/AlertNotificationService.cpp
-        components/ble/MusicService.cpp
-        components/ble/weather/WeatherService.cpp
-        components/ble/BatteryInformationService.cpp
-        components/ble/FSService.cpp
-        components/ble/ImmediateAlertService.cpp
-        components/ble/ServiceDiscovery.cpp
-        components/ble/HeartRateService.cpp
-        components/ble/MotionService.cpp
-        components/settings/Settings.cpp
-        components/timer/TimerController.cpp
-        components/alarm/AlarmController.cpp
-        drivers/Cst816s.cpp
-        FreeRTOS/port.c
-        FreeRTOS/port_cmsis_systick.c
-        FreeRTOS/port_cmsis.c
-
-        systemtask/SystemTask.cpp
-        systemtask/SystemMonitor.cpp
-        drivers/TwiMaster.cpp
-        components/gfx/Gfx.cpp
-        components/rle/RleDecoder.cpp
-        components/heartrate/HeartRateController.cpp
-        heartratetask/HeartRateTask.cpp
-        components/heartrate/Ppg.cpp
-        libs/interpolation/InterpolationLib.cpp
-        libs/interpolation/arduinoFFT.cpp
-
-        components/motor/MotorController.cpp
-        components/fs/FS.cpp
-        buttonhandler/ButtonHandler.cpp
-        touchhandler/TouchHandler.cpp
-        )
-
-list(APPEND RECOVERYLOADER_SOURCE_FILES
-        stdlib.c
-        FreeRTOS/heap_infinitime.c
-
-        FreeRTOS/port.c
-        FreeRTOS/port_cmsis_systick.c
-        FreeRTOS/port_cmsis.c
-
-        drivers/SpiNorFlash.cpp
-        drivers/SpiMaster.cpp
-        drivers/Spi.cpp
-        logging/NrfLogger.cpp
-
-        components/rle/RleDecoder.cpp
-
-        components/gfx/Gfx.cpp
-        drivers/St7789.cpp
-        components/brightness/BrightnessController.cpp
-
-        recoveryLoader.cpp
-        )
-
-
 set(INCLUDE_FILES
-
-        ${CMAKE_CURRENT_BINARY_DIR}/src/Version.h
-        BootloaderVersion.h
         logging/Logger.h
         logging/NrfLogger.h
         displayapp/DisplayApp.h
@@ -670,7 +577,6 @@ set(INCLUDE_FILES
         )
 
 include_directories(
-        ${CMAKE_BINARY_DIR}/src # include generated files like Version.h
         .
         ../
 )
@@ -988,156 +894,6 @@ if(BUILD_DFU)
           POST_BUILD
           COMMAND adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application ${IMAGE_MCUBOOT_FILE_NAME_HEX} ${DFU_MCUBOOT_FILE_NAME}
           COMMENT "post build (DFU) steps for ${EXECUTABLE_MCUBOOT_FILE_NAME}"
-          )
-endif()
-
-# InfiniTime recovery firmware (autonomous)
-set(EXECUTABLE_RECOVERY_NAME "pinetime-recovery")
-set(EXECUTABLE_RECOVERY_FILE_NAME ${EXECUTABLE_RECOVERY_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-add_executable(${EXECUTABLE_RECOVERY_NAME} ${RECOVERY_SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_RECOVERY_NAME} nimble nrf-sdk littlefs QCBOR infinitime_fonts)
-set_target_properties(${EXECUTABLE_RECOVERY_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_RECOVERY_FILE_NAME})
-target_compile_definitions(${EXECUTABLE_RECOVERY_NAME} PUBLIC "PINETIME_IS_RECOVERY")
-target_compile_options(${EXECUTABLE_RECOVERY_NAME} PUBLIC
-        ${COMMON_FLAGS}
-        ${WARNING_FLAGS}
-        $<$<CONFIG:DEBUG>: ${DEBUG_FLAGS}>
-        $<$<CONFIG:RELEASE>: ${RELEASE_FLAGS}>
-        $<$<COMPILE_LANGUAGE:CXX>: ${CXX_FLAGS}>
-        $<$<COMPILE_LANGUAGE:ASM>: ${ASM_FLAGS}>
-        )
-
-set_target_properties(${EXECUTABLE_RECOVERY_NAME} PROPERTIES
-        SUFFIX ".out"
-        LINK_FLAGS "-mthumb -mabi=aapcs -L ${NRF5_SDK_PATH}/modules/nrfx/mdk -T${NRF5_LINKER_SCRIPT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections -Wl,--print-memory-usage --specs=nano.specs -lc -lnosys -lm -Wl,-Map=${EXECUTABLE_RECOVERY_FILE_NAME}.map"
-        )
-
-add_custom_command(TARGET ${EXECUTABLE_RECOVERY_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_RECOVERY_FILE_NAME}.out
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_RECOVERY_FILE_NAME}.out "${EXECUTABLE_RECOVERY_FILE_NAME}.bin"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_RECOVERY_FILE_NAME}.out "${EXECUTABLE_RECOVERY_FILE_NAME}.hex"
-        COMMENT "post build steps for ${EXECUTABLE_RECOVERY_FILE_NAME}"
-        )
-
-# InfiniTime recovery firmware (mcuboot)
-set(EXECUTABLE_RECOVERY_MCUBOOT_NAME "pinetime-mcuboot-recovery")
-set(EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME ${EXECUTABLE_RECOVERY_MCUBOOT_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-set(IMAGE_RECOVERY_MCUBOOT_FILE_NAME ${EXECUTABLE_RECOVERY_MCUBOOT_NAME}-image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-set(IMAGE_RECOVERY_MCUBOOT_FILE_NAME_HEX ${IMAGE_RECOVERY_MCUBOOT_FILE_NAME}.hex)
-set(DFU_RECOVERY_MCUBOOT_FILE_NAME ${EXECUTABLE_RECOVERY_MCUBOOT_NAME}-dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
-add_executable(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} ${RECOVERY_SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} nimble nrf-sdk littlefs QCBOR infinitime_fonts)
-set_target_properties(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME})
-target_compile_definitions(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} PUBLIC "PINETIME_IS_RECOVERY")
-target_compile_options(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} PUBLIC
-        ${COMMON_FLAGS}
-        ${WARNING_FLAGS}
-        $<$<CONFIG:DEBUG>: ${DEBUG_FLAGS}>
-        $<$<CONFIG:RELEASE>: ${RELEASE_FLAGS}>
-        $<$<COMPILE_LANGUAGE:CXX>: ${CXX_FLAGS}>
-        $<$<COMPILE_LANGUAGE:ASM>: ${ASM_FLAGS}>
-        )
-
-set_target_properties(${EXECUTABLE_RECOVERY_MCUBOOT_NAME} PROPERTIES
-        SUFFIX ".out"
-        LINK_FLAGS "-mthumb -mabi=aapcs -L ${NRF5_SDK_PATH}/modules/nrfx/mdk -T${NRF5_LINKER_SCRIPT_MCUBOOT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections -Wl,--print-memory-usage --specs=nano.specs -lc -lnosys -lm -Wl,-Map=${EXECUTABLE_GRAPHICS_FILE_NAME}.map"
-        )
-
-add_custom_command(TARGET ${EXECUTABLE_RECOVERY_MCUBOOT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.out
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.out "${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.bin"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.out "${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.hex"
-        COMMAND ${CMAKE_SOURCE_DIR}/tools/mcuboot/imgtool.py create --align 1 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}.hex ${IMAGE_RECOVERY_MCUBOOT_FILE_NAME_HEX}
-        COMMAND ${CMAKE_OBJCOPY} -I ihex -O binary ${IMAGE_RECOVERY_MCUBOOT_FILE_NAME_HEX} "${IMAGE_RECOVERY_MCUBOOT_FILE_NAME}.bin"
-        COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/bin2c.py ${IMAGE_RECOVERY_MCUBOOT_FILE_NAME}.bin recoveryImage > recoveryImage.h
-        COMMENT "post build steps for ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}"
-        )
-
-if(BUILD_DFU)
-  add_custom_command(TARGET ${EXECUTABLE_RECOVERY_MCUBOOT_NAME}
-          POST_BUILD
-          COMMAND adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application ${IMAGE_RECOVERY_MCUBOOT_FILE_NAME_HEX} ${DFU_RECOVERY_MCUBOOT_FILE_NAME}
-          COMMENT "post build (DFU) steps for ${EXECUTABLE_RECOVERY_MCUBOOT_FILE_NAME}"
-          )
-endif()
-
-# Build binary that writes the recovery image into the SPI flash memory
-set(EXECUTABLE_RECOVERYLOADER_NAME "pinetime-recovery-loader")
-set(EXECUTABLE_RECOVERYLOADER_FILE_NAME ${EXECUTABLE_RECOVERYLOADER_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-add_executable(${EXECUTABLE_RECOVERYLOADER_NAME} ${RECOVERYLOADER_SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_RECOVERYLOADER_NAME} nrf-sdk QCBOR infinitime_fonts)
-set_target_properties(${EXECUTABLE_RECOVERYLOADER_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_RECOVERYLOADER_FILE_NAME})
-target_compile_options(${EXECUTABLE_RECOVERYLOADER_NAME} PUBLIC
-        ${COMMON_FLAGS}
-        ${WARNING_FLAGS}
-        $<$<CONFIG:DEBUG>: ${DEBUG_FLAGS}>
-        $<$<CONFIG:RELEASE>: ${RELEASE_FLAGS}>
-        $<$<COMPILE_LANGUAGE:CXX>: ${CXX_FLAGS}>
-        $<$<COMPILE_LANGUAGE:ASM>: ${ASM_FLAGS}>
-        )
-target_include_directories(${EXECUTABLE_RECOVERYLOADER_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>
-        )
-add_dependencies(${EXECUTABLE_RECOVERYLOADER_NAME} ${EXECUTABLE_RECOVERY_MCUBOOT_NAME})
-
-set_target_properties(${EXECUTABLE_RECOVERYLOADER_NAME} PROPERTIES
-        SUFFIX ".out"
-        LINK_FLAGS "-mthumb -mabi=aapcs -L ${NRF5_SDK_PATH}/modules/nrfx/mdk -T${NRF5_LINKER_SCRIPT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections -Wl,--print-memory-usage --specs=nano.specs -lc -lnosys -lm -Wl,-Map=${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.map"
-        )
-
-add_custom_command(TARGET ${EXECUTABLE_RECOVERYLOADER_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.out
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.out "${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.bin"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.out "${EXECUTABLE_RECOVERYLOADER_FILE_NAME}.hex"
-        COMMENT "post build steps for ${EXECUTABLE_RECOVERYLOADER_FILE_NAME}"
-        )
-
-# Build binary that writes the recovery image (MCUBoot version)
-set(EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME "pinetime-mcuboot-recovery-loader")
-set(EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-set(IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME}-image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-set(IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME_HEX ${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.hex)
-set(DFU_MCUBOOT_RECOVERYLOADER_FILE_NAME ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME}-dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
-add_executable(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} ${RECOVERYLOADER_SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} nrf-sdk QCBOR infinitime_fonts)
-set_target_properties(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME})
-target_compile_options(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} PUBLIC
-        ${COMMON_FLAGS}
-        ${WARNING_FLAGS}
-        $<$<CONFIG:DEBUG>: ${DEBUG_FLAGS}>
-        $<$<CONFIG:RELEASE>: ${RELEASE_FLAGS}>
-        $<$<COMPILE_LANGUAGE:CXX>: ${CXX_FLAGS}>
-        $<$<COMPILE_LANGUAGE:ASM>: ${ASM_FLAGS}>
-        )
-target_include_directories(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>
-        )
-add_dependencies(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} ${EXECUTABLE_RECOVERY_MCUBOOT_NAME})
-
-set_target_properties(${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME} PROPERTIES
-        SUFFIX ".out"
-        LINK_FLAGS "-mthumb -mabi=aapcs -std=gnu++98 -std=c99 -L ${NRF5_SDK_PATH}/modules/nrfx/mdk -T${NRF5_LINKER_SCRIPT_MCUBOOT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections -Wl,--print-memory-usage --specs=nano.specs -lc -lnosys -lm -Wl,-Map=${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.map"
-        )
-
-add_custom_command(TARGET ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.out
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.out "${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.bin"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.out "${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.hex"
-        COMMAND ${CMAKE_SOURCE_DIR}/tools/mcuboot/imgtool.py create --align 1 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.hex ${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME_HEX}
-        COMMAND ${CMAKE_OBJCOPY} -I ihex -O binary ${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME_HEX} "${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.bin"
-        COMMAND python3 ${CMAKE_SOURCE_DIR}/tools/bin2c.py ${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME}.bin recoveryLoaderImage > recoveryLoaderImage.h
-        COMMENT "post build steps for ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}"
-        )
-
-if(BUILD_DFU)
-  add_custom_command(TARGET ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_NAME}
-          POST_BUILD
-          COMMAND adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application ${IMAGE_MCUBOOT_RECOVERYLOADER_FILE_NAME_HEX} ${DFU_MCUBOOT_RECOVERYLOADER_FILE_NAME}
-          COMMENT "post build (DFU) steps for ${EXECUTABLE_MCUBOOT_RECOVERYLOADER_FILE_NAME}"
           )
 endif()
 

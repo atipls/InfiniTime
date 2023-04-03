@@ -5,7 +5,6 @@
 #include <host/ble_gap.h>
 #undef max
 #undef min
-#include "Version.h"
 
 namespace Pinetime {
     namespace Controllers {
@@ -29,7 +28,7 @@ namespace Pinetime {
             static constexpr const char* modelNumber = "PineTime";
             static constexpr const char* hwRevision = "1.0.0";
             static constexpr const char* serialNumber = "0";
-            static constexpr const char* fwRevision = Version::VersionString();
+            static constexpr const char* fwRevision = "1.0";
             static constexpr const char* swRevision = "InfiniTime";
 
             static constexpr ble_uuid16_t deviceInfoUuid {.u {.type = BLE_UUID_TYPE_16}, .value = deviceInfoId};

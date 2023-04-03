@@ -42,9 +42,7 @@ void FS::Init() {
         }
     }
 
-#ifndef PINETIME_IS_RECOVERY
     VerifyResource();
-#endif
 }
 
 void FS::VerifyResource() {

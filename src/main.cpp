@@ -27,7 +27,6 @@
 #include <drivers/Hrs3300.h>
 #include <drivers/Bma421.h>
 
-#include "BootloaderVersion.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NotificationManager.h"
@@ -76,17 +75,16 @@ Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
 static constexpr uint32_t MaxTwiFrequencyWithoutHardwareBug {0x06200000};
 Pinetime::Drivers::TwiMaster twiMaster {NRF_TWIM1, MaxTwiFrequencyWithoutHardwareBug, Pinetime::PinMap::TwiSda, Pinetime::PinMap::TwiScl};
 Pinetime::Drivers::Cst816S touchPanel {twiMaster, touchPanelTwiAddress};
-#ifdef PINETIME_IS_RECOVERY
-    #include "displayapp/DisplayAppRecovery.h"
-#else
-    #include "displayapp/DisplayApp.h"
-    #include "main.h"
-#endif
+
+#include "displayapp/DisplayApp.h"
+#include "main.h"
+
 Pinetime::Drivers::Bma421 motionSensor {twiMaster, motionSensorTwiAddress};
 Pinetime::Drivers::Hrs3300 heartRateSensor {twiMaster, heartRateSensorTwiAddress};
 
 TimerHandle_t debounceTimer;
 TimerHandle_t debounceChargeTimer;
+
 Pinetime::Controllers::Battery batteryController;
 Pinetime::Controllers::Ble bleController;
 
@@ -288,9 +286,6 @@ int main() {
 
     debounceTimer = xTimerCreate("debounceTimer", 10, pdFALSE, nullptr, DebounceTimerCallback);
     debounceChargeTimer = xTimerCreate("debounceTimerCharge", 200, pdFALSE, nullptr, DebounceTimerChargeCallback);
-
-    // retrieve version stored by bootloader
-    Pinetime::BootloaderVersion::SetVersion(NRF_TIMER2->CC[0]);
 
     if (NoInit_MagicWord == NoInit_MagicValue) {
         dateTimeController.SetCurrentTime(NoInit_BackUpTime);

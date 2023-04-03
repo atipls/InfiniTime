@@ -16,8 +16,6 @@
 #include "touchhandler/TouchHandler.h"
 
 #include "displayapp/Messages.h"
-#include "BootErrors.h"
-
 #include "utility/StaticStack.h"
 
 namespace Pinetime {
@@ -57,7 +55,7 @@ namespace Pinetime {
                        Pinetime::Controllers::TimerController& timerController, Pinetime::Controllers::AlarmController& alarmController,
                        Pinetime::Controllers::BrightnessController& brightnessController, Pinetime::Controllers::TouchHandler& touchHandler,
                        Pinetime::Controllers::FS& filesystem);
-            void Start(System::BootErrors error);
+            void Start();
             void PushMessage(Display::Messages msg);
 
             void StartApp(Apps app, DisplayApp::FullRefreshDirections direction);
@@ -112,7 +110,6 @@ namespace Pinetime {
 
             Apps nextApp = Apps::None;
             DisplayApp::FullRefreshDirections nextDirection;
-            System::BootErrors bootError;
             void ApplyBrightness();
 
             static constexpr size_t returnAppStackSize = 10;
